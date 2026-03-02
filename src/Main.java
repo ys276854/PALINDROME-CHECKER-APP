@@ -1,5 +1,3 @@
-
-
 import java.util.*;
 
 public class Main {
@@ -9,19 +7,18 @@ public class Main {
         // Normalize string (optional)
         String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        // Convert to char array
-        char[] chars = normalized.toCharArray();
+        Stack<Character> stack = new Stack<>();
 
-        int start = 0;
-        int end = chars.length - 1;
+        // Step 1: Push characters into stack
+        for (char ch : normalized.toCharArray()) {
+            stack.push(ch);
+        }
 
-        // Two-pointer comparison
-        while (start < end) {
-            if (chars[start] != chars[end]) {
+        // Step 2: Pop characters and compare with original
+        for (char ch : normalized.toCharArray()) {
+            if (ch != stack.pop()) {
                 return false;
             }
-            start++;
-            end--;
         }
 
         return true;
