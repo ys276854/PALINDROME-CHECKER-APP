@@ -1,48 +1,23 @@
-import java.util.*;
+public class Main{
+    public static void main(String[] args) {
+        String input = "madam";
+        String cleanStr = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-public class Main {
+        boolean isPalindrome = checkRecursive(cleanStr, 0, cleanStr.length() - 1);
 
-    public static boolean isPalindrome(String input) {
-
-        // Normalize string (optional but recommended)
-        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-
-        Deque<Character> deque = new ArrayDeque<>();
-
-        // Insert characters into deque
-        for (char ch : normalized.toCharArray()) {
-            deque.addLast(ch);
-        }
-
-        // Compare front and rear until deque is empty or one element left
-        while (deque.size() > 1) {
-
-            char front = deque.removeFirst();
-            char rear = deque.removeLast();
-
-            if (front != rear) {
-                return false;
-            }
-        }
-
-        return true;
+        System.out.println("Input : " + input);
+        System.out.println("Is Palindrome? : " + isPalindrome);
     }
 
-    public static void main(String[] args) {
-
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter a string: ");
-        String input = scanner.nextLine();
-
-        boolean result = isPalindrome(input);
-
-        if (result) {
-            System.out.println("The string \"" + input + "\" is a Palindrome.");
-        } else {
-            System.out.println("The string \"" + input + "\" is NOT a Palindrome.");
+    public static boolean checkRecursive(String str, int start, int end) {
+        if (start >= end) {
+            return true;
         }
 
-        scanner.close();
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
+        }
+
+        return checkRecursive(str, start + 1, end - 1);
     }
 }
