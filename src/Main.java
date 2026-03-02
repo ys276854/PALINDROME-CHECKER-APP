@@ -4,21 +4,23 @@ public class Main {
 
     public static boolean isPalindrome(String input) {
 
-        // Normalize string (optional)
+        // Normalize string (optional but recommended)
         String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        Queue<Character> queue = new LinkedList<>();
-        Stack<Character> stack = new Stack<>();
+        Deque<Character> deque = new ArrayDeque<>();
 
-        // Step 1: Enqueue & Push characters
+        // Insert characters into deque
         for (char ch : normalized.toCharArray()) {
-            queue.add(ch);    // FIFO
-            stack.push(ch);   // LIFO
+            deque.addLast(ch);
         }
 
-        // Step 2: Compare dequeue vs pop
-        while (!queue.isEmpty()) {
-            if (!queue.poll().equals(stack.pop())) {
+        // Compare front and rear until deque is empty or one element left
+        while (deque.size() > 1) {
+
+            char front = deque.removeFirst();
+            char rear = deque.removeLast();
+
+            if (front != rear) {
                 return false;
             }
         }
