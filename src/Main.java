@@ -1,61 +1,58 @@
 import java.util.*;
 
-interface PalindromeStrategy {
-    boolean isValid(String str);
-}
-
-class StackStrategy implements PalindromeStrategy {
-    public boolean isValid(String str) {
-        String clean = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        Stack<Character> stack = new Stack<>();
-        for (char ch : clean.toCharArray()) {
-            stack.push(ch);
-        }
-        StringBuilder reversed = new StringBuilder();
-        while (!stack.isEmpty()) {
-            reversed.append(stack.pop());
-        }
-        return clean.equals(reversed.toString());
-    }
-}
-
-class DequeStrategy implements PalindromeStrategy {
-    public boolean isValid(String str) {
-        String clean = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        Deque<Character> deque = new ArrayDeque<>();
-        for (char ch : clean.toCharArray()) {
-            deque.addLast(ch);
-        }
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
-
-class PalindromeValidator {
-    private PalindromeStrategy strategy;
-
-    public void setStrategy(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public boolean validate(String str) {
-        return strategy.isValid(str);
-    }
-}
-
 public class Main {
     public static void main(String[] args) {
         String input = "level";
-        PalindromeValidator validator = new PalindromeValidator();
+        String cleanStr = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        validator.setStrategy(new DequeStrategy());
-        boolean result = validator.validate(input);
+        // 1. Two-Pointer Approach Performance
+        long startTime = System.nanoTime();
+        boolean res1 = checkTwoPointer(cleanStr);
+        long endTime = System.nanoTime();
+        long durationTP = endTime - startTime;
+
+        // 2. Deque Approach Performance
+        startTime = System.nanoTime();
+        boolean res2 = checkDeque(cleanStr);
+        endTime = System.nanoTime();
+        long durationDeque = endTime - startTime;
+
+        // 3. Stack (Reverse) Approach Performance
+        startTime = System.nanoTime();
+        boolean res3 = checkStack(cleanStr);
+        endTime = System.nanoTime();
+        long durationStack = endTime - startTime;
 
         System.out.println("Input : " + input);
-        System.out.println("Is Palindrome? : " + result);
+        System.out.println("Is Palindrome? : " + res1);
+        System.out.println("\n--- Performance Results (nanoseconds) ---");
+        System.out.println("Two-Pointer Time : " + durationTP + " ns");
+        System.out.println("Deque Time       : " + durationDeque + " ns");
+        System.out.println("Stack Time       : " + durationStack + " ns");
+    }
+
+    public static boolean checkTwoPointer(String str) {
+        int left = 0, right = str.length() - 1;
+        while (left < right) {
+            if (str.charAt(left++) != str.charAt(right--)) return false;
+        }
+        return true;
+    }
+
+    public static boolean checkDeque(String str) {
+        Deque<Character> deque = new ArrayDeque<>();
+        for (char ch : str.toCharArray()) deque.addLast(ch);
+        while (deque.size() > 1) {
+            if (deque.removeFirst() != deque.removeLast()) return false;
+        }
+        return true;
+    }
+
+    public static boolean checkStack(String str) {
+        Stack<Character> stack = new Stack<>();
+        for (char ch : str.toCharArray()) stack.push(ch);
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty()) sb.append(stack.pop());
+        return str.equals(sb.toString());
     }
 }
