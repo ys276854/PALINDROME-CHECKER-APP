@@ -7,16 +7,18 @@ public class Main {
         // Normalize string (optional)
         String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
+        Queue<Character> queue = new LinkedList<>();
         Stack<Character> stack = new Stack<>();
 
-        // Step 1: Push characters into stack
+        // Step 1: Enqueue & Push characters
         for (char ch : normalized.toCharArray()) {
-            stack.push(ch);
+            queue.add(ch);    // FIFO
+            stack.push(ch);   // LIFO
         }
 
-        // Step 2: Pop characters and compare with original
-        for (char ch : normalized.toCharArray()) {
-            if (ch != stack.pop()) {
+        // Step 2: Compare dequeue vs pop
+        while (!queue.isEmpty()) {
+            if (!queue.poll().equals(stack.pop())) {
                 return false;
             }
         }
