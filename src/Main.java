@@ -1,20 +1,30 @@
-import java.util.Scanner;
+
+
+import java.util.*;
 
 public class Main {
 
     public static boolean isPalindrome(String input) {
 
-        // Normalize input: remove spaces & convert to lowercase (optional)
+        // Normalize string (optional)
         String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        // Reverse string using loop
-        String reversed = "";
-        for (int i = normalized.length() - 1; i >= 0; i--) {
-            reversed += normalized.charAt(i); // string concatenation
+        // Convert to char array
+        char[] chars = normalized.toCharArray();
+
+        int start = 0;
+        int end = chars.length - 1;
+
+        // Two-pointer comparison
+        while (start < end) {
+            if (chars[start] != chars[end]) {
+                return false;
+            }
+            start++;
+            end--;
         }
 
-        // Compare original and reversed
-        return normalized.equals(reversed);
+        return true;
     }
 
     public static void main(String[] args) {
