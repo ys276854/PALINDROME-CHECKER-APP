@@ -1,29 +1,59 @@
-class PalindromeService {
-    public boolean checkPalindrome(String str) {
-        String cleanStr = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+import java.util.*;
 
-        if (cleanStr.isEmpty()) return true;
+interface PalindromeStrategy {
+    boolean isValid(String str);
+}
 
-        int left = 0;
-        int right = cleanStr.length() - 1;
+class StackStrategy implements PalindromeStrategy {
+    public boolean isValid(String str) {
+        String clean = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        Stack<Character> stack = new Stack<>();
+        for (char ch : clean.toCharArray()) {
+            stack.push(ch);
+        }
+        StringBuilder reversed = new StringBuilder();
+        while (!stack.isEmpty()) {
+            reversed.append(stack.pop());
+        }
+        return clean.equals(reversed.toString());
+    }
+}
 
-        while (left < right) {
-            if (cleanStr.charAt(left) != cleanStr.charAt(right)) {
+class DequeStrategy implements PalindromeStrategy {
+    public boolean isValid(String str) {
+        String clean = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        Deque<Character> deque = new ArrayDeque<>();
+        for (char ch : clean.toCharArray()) {
+            deque.addLast(ch);
+        }
+        while (deque.size() > 1) {
+            if (deque.removeFirst() != deque.removeLast()) {
                 return false;
             }
-            left++;
-            right--;
         }
         return true;
     }
 }
 
+class PalindromeValidator {
+    private PalindromeStrategy strategy;
+
+    public void setStrategy(PalindromeStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public boolean validate(String str) {
+        return strategy.isValid(str);
+    }
+}
+
 public class Main {
     public static void main(String[] args) {
-        String input = "racecar";
+        String input = "level";
+        PalindromeValidator validator = new PalindromeValidator();
 
-        PalindromeService service = new PalindromeService();
-        boolean result = service.checkPalindrome(input);
+        validator.setStrategy(new DequeStrategy());
+        boolean result = validator.validate(input);
 
         System.out.println("Input : " + input);
         System.out.println("Is Palindrome? : " + result);
